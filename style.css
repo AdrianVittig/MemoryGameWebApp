@@ -24,76 +24,36 @@ body {
   font-size: 2.5rem;
 }
 
-button.regular {
-  background-color: #2b5329;
-  position: absolute;
-  left: 2020px;
-  top: 0px;
-  font-size: 2rem;
-  padding: 2rem;
+button {
+  font-size: 1rem;
+  padding: 0.8rem 1.2rem;
   border-radius: 0.5rem;
-  border: none;
   font-weight: bold;
-  background-color: rgb(33, 119, 119);
-  margin-top: 2rem;
-  margin-left: 5rem;
-  color: white;
   cursor: pointer;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button.regular {
+  background: linear-gradient(90deg, #56c9ff, #5a4ff7);
+  color: white;
 }
 
 button.regular:hover {
-  background-color: #2b5329;
-  position: absolute;
-  left: 2020px;
-  top: 0px;
-  font-size: 2rem;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  background-color: #1d3a1e;
-  margin-top: 2rem;
-  margin-left: 5rem;
+  background: linear-gradient(90deg, #317a9c, #251f72);
   color: white;
-  cursor: pointer;
-}
-
-button#start-stop-watch.regular {
-  background-color: #007f5f;
-}
-button#stop-stop-watch.regular {
-  background-color: #ff3d00;
-}
-button#restart-stop-watch.regular {
-  background-color: #ffab00;
 }
 
 button.fruits {
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.5rem;
-  color: white;
   background: linear-gradient(90deg, #ffa726, #ff7043);
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: white;
 }
+
 button.fruits:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(255, 112, 67, 0.5);
+  background: linear-gradient(90deg, #a76d17, #973e23);
+  color: white;
 }
 
-button#start-stop-watch.fruits {
-  background: linear-gradient(90deg, #ffeb3b, #ffc107);
-}
-
-button#stop-stop-watch.fruits {
-  background: linear-gradient(90deg, #ff3d00, #d50000);
-}
-
-button#restart-stop-watch.fruits {
-  background: linear-gradient(90deg, #69f0ae, #00e676);
-}
 .card {
   position: relative;
   width: 100px;
@@ -143,14 +103,22 @@ button#restart-stop-watch.fruits {
 }
 
 .game-stats {
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: fixed;
   bottom: 20px;
   right: 20px;
 }
 
 #total-clicks,
-#stopwatch {
+#timer {
   font-size: 3rem;
+}
+
+#timer {
+  margin-right: 11.5rem;
 }
 
 #start-stop-watch {
@@ -261,4 +229,67 @@ button#restart-stop-watch.fruits {
   padding-right: 2rem;
   cursor: pointer;
   border-radius: 0.6rem;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0s ease-in-out;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  margin: 1rem 2rem;
+}
+
+.level-button {
+  padding: 1rem 2rem;
+  margin: 0.7rem;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#easy-level {
+  background-color: #40cc44;
+  color: white;
+}
+
+#easy-level:hover {
+  background-color: #105214;
+}
+
+#medium-level {
+  background-color: #ce5d1b;
+  color: white;
+}
+
+#medium-level:hover {
+  background-color: #77350f;
+}
+
+#hard-level {
+  background-color: #d31c0f;
+  color: white;
+}
+
+#hard-level:hover {
+  background-color: #5e0c0c;
 }

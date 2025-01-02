@@ -12,16 +12,29 @@
       <button id="switch-theme">🍑</button>
     </header>
 
+    <div id="level-modal" class="modal">
+      <div class="modal-content">
+        <h2>Select Level</h2>
+        <button id="easy-level" class="level-button">Easy</button>
+        <button id="medium-level" class="level-button">Medium</button>
+        <button id="hard-level" class="level-button">Hard</button>
+      </div>
+    </div>
+
+    <div class="level-selection">
+      <button id="easy-level">Easy</button>
+      <button id="medium-level">Medium</button>
+      <button id="hard-level">Hard</button>
+    </div>
+
     <!--Карти -->
     <div class="cards-container"></div>
 
     <!-- Game Stats -->
     <div class="game-stats">
       <p id="total-clicks">Total Clicks 👆: 0</p>
-      <button id="start-stop-watch">Start 🕛</button>
-      <button id="stop-stop-watch">Stop 🏁</button>
       <button id="restart-stop-watch">Restart 🗘</button>
-      <p id="stopwatch">00:00:00</p>
+      <p id="timer">Time Left: 00:00</p>
     </div>
     <script src="script.js"></script>
   </body>

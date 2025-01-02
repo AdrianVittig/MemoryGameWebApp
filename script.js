@@ -1,15 +1,28 @@
 const clicksCounter = document.getElementById("total-clicks");
-
-const stopwatchDisplay = document.getElementById("stopwatch");
-
 const cardsElementHTML = document.querySelectorAll(".card-element");
 const cardsContainer = document.querySelector(".cards-container");
-const startButtonStopwatch = document.getElementById("start-stop-watch");
-const stopButtonStopwatch = document.getElementById("stop-stop-watch");
 const restartButtonStopwatch = document.getElementById("restart-stop-watch");
 const fruitThemeBtn = document.getElementById("switch-theme");
+const modal = document.getElementById("level-modal");
 
 let score = 0;
+
+let currentLevel = "easy";
+
+let intervalId = null;
+
+let firstCard = null;
+let secondCard = null;
+
+let lockBoard = true;
+
+let clicks = 0;
+
+const levels = {
+  easy: { pairs: 8, timeLimit: 120, scoreMultiplier: 1 },
+  medium: { pairs: 12, timeLimit: 120, scoreMultiplier: 2 },
+  hard: { pairs: 16, timeLimit: 120, scoreMultiplier: 5 }
+};
 
 const cardImages = [
   "imgs/cards/Jack_of_clubs.svg.png",
@@ -41,13 +54,54 @@ const cardImagesFruits = [
 ];
 
 let currentTheme = "regular";
+let timerId = null;
+function getShuffledCards(level) {
+  const pairs = levels[level].pairs;
+  const cards = currentTheme === "fruits" ? cardImagesFruits : cardImages;
+  return [...cards.slice(0, pairs), ...cards.slice(0, pairs)].sort(
+    () => Math.random() - 0.5
+  );
+}
 
-function getShuffledCards() {
-  return currentTheme === "regular"
-    ? [...cardImages, ...cardImages].sort(() => Math.random() - 0.5)
-    : [...cardImagesFruits, ...cardImagesFruits].sort(
-        () => Math.random() - 0.5
-      );
+window.addEventListener("load", () => {
+  modal.style.display = "flex";
+});
+
+document.querySelectorAll(".level-button").forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const level = e.target.id.replace("-level", "");
+    startGame(level);
+    document.getElementById("level-modal").style.display = "none";
+  });
+});
+
+function startGame(level) {
+  restartGame();
+}
+
+function startTimer(level) {
+  let timeLeft = levels[level].timeLimit;
+  const timerDisplay = document.getElementById("timer");
+
+  function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `Time left: ${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(seconds).padStart(2, "0")}`;
+
+    if (timeLeft === 0) {
+      clearInterval(timerId);
+      calculateScore(timeLeft);
+      alert("You have no time left.");
+    } else {
+      timeLeft--;
+    }
+  }
+  clearInterval(timerId);
+  updateTimer();
+  timerId = setInterval(updateTimer, 1000);
 }
 
 //Размешване на карти
@@ -59,81 +113,17 @@ function getShuffledCards() {
 //   () => Math.random() - 0.5
 // );
 
-let firstCard = null;
-let secondCard = null;
-
-let lockBoard = true;
-
-let clicks = 0;
-
-let hours = 0;
-let minutes = 0;
-let seconds = 0;
-let intervalId = null;
-
-function updateStopwatch() {
-  seconds++;
-  if (seconds == 60) {
-    seconds = 0;
-    minutes++;
-  }
-  if (minutes == 60) {
-    minutes = 0;
-    hours++;
-  }
-  const formattedTime = `${String(hours).padStart(2, "0")}:${String(
-    minutes
-  ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  stopwatchDisplay.textContent = formattedTime;
-}
-
-startButtonStopwatch.addEventListener("click", function () {
-  intervalId = setInterval(updateStopwatch, 10);
-  lockBoard = false;
-  toggleButtons();
-});
-
-stopButtonStopwatch.addEventListener("click", function () {
-  clearInterval(intervalId);
-  lockBoard = true;
-  toggleButtons();
-});
-
 restartButtonStopwatch.addEventListener("click", function () {
-  clearInterval(intervalId);
-  seconds = 0;
-  minutes = 0;
-  hours = 0;
-  clicks = 0;
-  lockBoard = true;
-  score = 0;
-  stopwatchDisplay.textContent = "00:00:00";
-  clicksCounter.textContent = `Total Clicks 👆: ${clicks}`;
-  if (stopButtonStopwatch.style.display === "inline-block") {
-    toggleButtons();
-  }
-  cardsContainer.innerHTML = "";
-  createCards();
+  restartGame();
 });
-
-function toggleButtons() {
-  if (startButtonStopwatch.style.display === "none") {
-    startButtonStopwatch.style.display = "inline-block";
-    stopButtonStopwatch.style.display = "none";
-  } else {
-    startButtonStopwatch.style.display = "none";
-    stopButtonStopwatch.style.display = "inline-block";
-  }
-}
 
 cardsContainer.addEventListener("click", (e) => {
   const clickedCard = e.target.closest(".card");
-  if (!lockBoard) {
-    clicks++;
-    clicksCounter.textContent = `Total Clicks 👆: ${clicks}`;
-  }
   if (!clickedCard || lockBoard || clickedCard.classList.contains("flipped")) {
     return;
+  } else {
+    clicks++;
+    clicksCounter.textContent = `Total Clicks 👆: ${clicks}`;
   }
 
   clickedCard.classList.add("flipped");
@@ -173,7 +163,7 @@ function checkForWin() {
   );
 
   if (allMatched) {
-    clearInterval(intervalId);
+    clearInterval(timerId);
 
     setTimeout(() => {
       alert(`Your score is ${score}🥳🎉`);
@@ -192,8 +182,9 @@ function updateCardBack() {
     cardBack.src = backImage;
   });
 }
-function createCards() {
-  const shuffledArray = getShuffledCards();
+
+function createCards(level) {
+  const shuffledArray = getShuffledCards(level);
   const backImage =
     currentTheme === "fruits"
       ? "imgs/cards/printable-flash-card-of-fruits-avocado-1.png"
@@ -214,30 +205,27 @@ function createCards() {
   });
 }
 
-createCards();
+createCards(currentLevel);
 
 if (lockBoard) {
   alert(`You have to press "Start" to play`);
 }
 
-function calculateScore() {
-  const shuffledArray = getShuffledCards();
-  if (shuffledArray.length === 24) {
-    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+function calculateScore(timeLeft) {
+  const shuffledArray = getShuffledCards(currentLevel);
+  if (shuffledArray.length === levels[currentLevel].pairs * 2) {
+    const totalSeconds = levels[currentLevel].timeLimit - timeLeft;
 
-    if (totalSeconds <= 70) {
+    if (clicks <= 25) {
       score = 30;
-    } else if (totalSeconds > 70 && totalSeconds <= 85) {
+    } else if (clicks > 25 && clicks <= 35) {
       score = 22;
-    } else if (totalSeconds > 85 && totalSeconds <= 100) {
+    } else if (clicks > 35 && clicks <= 45) {
       score = 15;
-    } else if (totalSeconds > 100 && totalSeconds <= 180) {
+    } else if (clicks > 45 && clicks <= 55) {
       score = 7;
     } else {
       score = 0;
-    }
-    if (clicks < 70) {
-      score += 20;
     }
   }
 }
@@ -251,16 +239,29 @@ fruitThemeBtn.addEventListener("click", () => {
   document.body.style.backgroundColor =
     currentTheme === "fruits" ? "#f7e6a2" : "#2b5329da";
 
-  createCards();
+  createCards(currentLevel);
   updateButtonStyles(currentTheme);
 });
 
 function updateButtonStyles(theme) {
-  const buttons = document.querySelectorAll(
-    "#start-stop-watch, #stop-stop-watch, #restart-stop-watch"
-  );
+  const buttons = [restartButtonStopwatch];
   buttons.forEach((button) => {
     button.classList.remove("regular", "fruits");
     button.classList.add(theme);
   });
+}
+
+function restartGame(level = currentLevel) {
+  clearInterval(timerId);
+
+  clicks = 0;
+  lockBoard = false;
+  score = 0;
+  firstCard = null;
+  secondCard = null;
+
+  clicksCounter.textContent = `Total Clicks 👆: ${clicks}`;
+  cardsContainer.innerHTML = "";
+  createCards(level);
+  startTimer(level);
 }
