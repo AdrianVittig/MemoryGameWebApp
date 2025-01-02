@@ -121,95 +121,36 @@ button.fruits:hover {
   margin-right: 11.5rem;
 }
 
-#start-stop-watch {
-  position: absolute;
-  right: 110px;
-  bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  background-color: rgb(33, 119, 119);
-  margin-top: 2rem;
-  margin-left: 5rem;
-  color: white;
-  cursor: pointer;
-}
-
-#start-stop-watch:hover {
-  position: absolute;
-  right: 110px;
-  bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  background-color: rgb(8, 53, 53);
-  margin-top: 2rem;
-  margin-left: 5rem;
-  color: white;
-  cursor: pointer;
-}
-
-#stop-stop-watch {
-  display: none;
-  position: absolute;
-  right: 110px;
-  bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  background-color: rgb(33, 119, 119);
-  margin-top: 2rem;
-  margin-left: 5rem;
-  color: white;
-  cursor: pointer;
-}
-
-#stop-stop-watch:hover {
-  position: absolute;
-  right: 110px;
-  bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  background-color: rgb(8, 53, 53);
-  margin-top: 2rem;
-  margin-left: 5rem;
-  color: white;
-  cursor: pointer;
-}
-
 #restart-stop-watch {
   position: absolute;
-  right: 10px;
+  right: 20px;
   bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
   font-weight: bold;
-  background-color: rgb(33, 119, 119);
+  background-color: rgb(52, 24, 212);
   margin-top: 2rem;
   margin-left: 5rem;
   color: white;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 #restart-stop-watch:hover {
   position: absolute;
-  right: 10px;
+  right: 20px;
   bottom: 5px;
-  font-size: 0.8rem;
-  padding: 0.8rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
   font-weight: bold;
-  background-color: rgb(8, 53, 53);
+  background-color: rgb(31, 13, 128);
   margin-top: 2rem;
   margin-left: 5rem;
   color: white;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 #switch-theme {
@@ -265,6 +206,15 @@ button.fruits:hover {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.level-button:hover {
+  opacity: 0.8;
+}
+
+.level-button.active {
+  background-color: #333;
+  color: #fff;
 }
 
 #easy-level {

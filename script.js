@@ -36,7 +36,11 @@ const cardImages = [
   "imgs/cards/King_of_clubs.svg.png",
   "imgs/cards/King_of_diamonds.svg.png",
   "imgs/cards/Ace_of_hearts.svg.png",
-  "imgs/cards/Ace_of_spades.svg.png"
+  "imgs/cards/Ace_of_spades.svg.png",
+  "imgs/cards/Ace_of_diamonds.svg.png",
+  "imgs/cards/Ace_of_clubs.svg.png",
+  "imgs/cards/pngtree-playing-card-ten-card-spades-joker-png-image_11785156.png",
+  "imgs/cards/Playing_card_heart_10.svg.png"
 ];
 
 const cardImagesFruits = [
@@ -69,14 +73,28 @@ window.addEventListener("load", () => {
 
 document.querySelectorAll(".level-button").forEach((button) => {
   button.addEventListener("click", (e) => {
-    const level = e.target.id.replace("-level", "");
-    startGame(level);
+    const selectedLevel = e.target.id.replace("-level", "");
+    currentLevel = selectedLevel;
+    highlightActiveLevel(selectedLevel);
+    restartGame(selectedLevel);
     document.getElementById("level-modal").style.display = "none";
   });
 });
 
+function highlightActiveLevel(level) {
+  document.querySelectorAll(".level-button").forEach((button) => {
+    if (button.id.replace("-level", "") === level) {
+      button.style.backgroundColor = "#333";
+      button.style.color = "#fff";
+    } else {
+      button.style.backgroundColor = "";
+      button.style.color = "";
+    }
+  });
+}
+
 function startGame(level) {
-  restartGame();
+  restartGame(level);
 }
 
 function startTimer(level) {
@@ -206,10 +224,6 @@ function createCards(level) {
 }
 
 createCards(currentLevel);
-
-if (lockBoard) {
-  alert(`You have to press "Start" to play`);
-}
 
 function calculateScore(timeLeft) {
   const shuffledArray = getShuffledCards(currentLevel);
