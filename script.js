@@ -7,6 +7,9 @@ const cardsContainer = document.querySelector(".cards-container");
 const startButtonStopwatch = document.getElementById("start-stop-watch");
 const stopButtonStopwatch = document.getElementById("stop-stop-watch");
 const restartButtonStopwatch = document.getElementById("restart-stop-watch");
+const fruitThemeBtn = document.getElementById("switch-theme");
+
+let score = 0;
 
 const cardImages = [
   "imgs/cards/Jack_of_clubs.svg.png",
@@ -23,10 +26,38 @@ const cardImages = [
   "imgs/cards/Ace_of_spades.svg.png"
 ];
 
+const cardImagesFruits = [
+  "imgs/cards/printable-flash-card-of-fruits-apple-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-grapes-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-kiwifruit-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-lemon-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-banana-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-orange-1-2-1024x1024.png",
+  "imgs/cards/printable-flash-card-of-fruits-peach-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-pineapple-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-strawberry-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-watermelon-1.png",
+  "imgs/cards/printable-flash-card-of-fruits-pomegranate-1.png"
+];
+
+let currentTheme = "regular";
+
+function getShuffledCards() {
+  return currentTheme === "regular"
+    ? [...cardImages, ...cardImages].sort(() => Math.random() - 0.5)
+    : [...cardImagesFruits, ...cardImagesFruits].sort(
+        () => Math.random() - 0.5
+      );
+}
+
 //Размешване на карти
-const shuffledCards = [...cardImages, ...cardImages].sort(
-  () => Math.random() - 0.5
-);
+// const shuffledCards = [...cardImages, ...cardImages].sort(
+//   () => Math.random() - 0.5
+// );
+
+// const shuffleFruitCards = [...cardImagesFruits, ...cardImagesFruits].sort(
+//   () => Math.random() - 0.5
+// );
 
 let firstCard = null;
 let secondCard = null;
@@ -64,6 +95,7 @@ startButtonStopwatch.addEventListener("click", function () {
 
 stopButtonStopwatch.addEventListener("click", function () {
   clearInterval(intervalId);
+  lockBoard = true;
   toggleButtons();
 });
 
@@ -73,11 +105,15 @@ restartButtonStopwatch.addEventListener("click", function () {
   minutes = 0;
   hours = 0;
   clicks = 0;
+  lockBoard = true;
+  score = 0;
   stopwatchDisplay.textContent = "00:00:00";
   clicksCounter.textContent = `Total Clicks 👆: ${clicks}`;
   if (stopButtonStopwatch.style.display === "inline-block") {
     toggleButtons();
   }
+  cardsContainer.innerHTML = "";
+  createCards();
 });
 
 function toggleButtons() {
@@ -88,18 +124,6 @@ function toggleButtons() {
     startButtonStopwatch.style.display = "none";
     stopButtonStopwatch.style.display = "inline-block";
   }
-}
-
-function createCards() {
-  shuffledCards.forEach((card, index) => {
-    const cardElement = document.createElement("div");
-    cardElement.classList.add("card");
-    cardElement.dataset.value = card;
-    cardElement.innerHTML = `<img class = "card-front" src="${card}" alt="card front"/>
-    <img class = "card-back" src="imgs/cards/backOfCards.png" alt="card back"/> `;
-
-    cardsContainer.appendChild(cardElement);
-  });
 }
 
 cardsContainer.addEventListener("click", (e) => {
@@ -130,6 +154,7 @@ function checkMatch() {
   if (isMatch) {
     firstCard = null;
     secondCard = null;
+    checkForWin();
   } else {
     lockBoard = true;
     setTimeout(() => {
@@ -138,12 +163,104 @@ function checkMatch() {
       firstCard = null;
       secondCard = null;
       lockBoard = false;
-    }, 1000);
+    }, 350);
   }
+}
+calculateScore();
+function checkForWin() {
+  const allMatched = [...cardsContainer.children].every((card) =>
+    card.classList.contains("flipped")
+  );
+
+  if (allMatched) {
+    clearInterval(intervalId);
+
+    setTimeout(() => {
+      alert(`Your score is ${score}🥳🎉`);
+    }, 500);
+  }
+}
+
+function updateCardBack() {
+  const backImage =
+    currentTheme === "fruits"
+      ? "imgs/cards/printable-flash-card-of-fruits-avocado-1.png"
+      : "imgs/cards/backOfCards.png";
+
+  const cardBacks = document.querySelectorAll(".card-back");
+  cardBacks.forEach((cardBack) => {
+    cardBack.src = backImage;
+  });
+}
+function createCards() {
+  const shuffledArray = getShuffledCards();
+  const backImage =
+    currentTheme === "fruits"
+      ? "imgs/cards/printable-flash-card-of-fruits-avocado-1.png"
+      : "imgs/cards/backOfCards.png";
+  cardsContainer.innerHTML = "";
+
+  shuffledArray.forEach((card) => {
+    const cardElement = document.createElement("div");
+    cardElement.classList.add("card");
+    cardElement.dataset.value = card;
+
+    cardElement.innerHTML = `
+      <img class="card-front" src="${card}" alt="card front"/>
+      <img class="card-back" src="${backImage}" alt="card back"/>
+    `;
+
+    cardsContainer.appendChild(cardElement);
+  });
 }
 
 createCards();
 
 if (lockBoard) {
   alert(`You have to press "Start" to play`);
+}
+
+function calculateScore() {
+  const shuffledArray = getShuffledCards();
+  if (shuffledArray.length === 24) {
+    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+    if (totalSeconds <= 70) {
+      score = 30;
+    } else if (totalSeconds > 70 && totalSeconds <= 85) {
+      score = 22;
+    } else if (totalSeconds > 85 && totalSeconds <= 100) {
+      score = 15;
+    } else if (totalSeconds > 100 && totalSeconds <= 180) {
+      score = 7;
+    } else {
+      score = 0;
+    }
+    if (clicks < 70) {
+      score += 20;
+    }
+  }
+}
+
+fruitThemeBtn.addEventListener("click", () => {
+  currentTheme = currentTheme === "regular" ? "fruits" : "regular";
+
+  fruitThemeBtn.innerHTML = currentTheme === "fruits" ? "♠️" : "🍑";
+  updateCardBack();
+
+  document.body.style.backgroundColor =
+    currentTheme === "fruits" ? "#f7e6a2" : "#2b5329da";
+
+  createCards();
+  updateButtonStyles(currentTheme);
+});
+
+function updateButtonStyles(theme) {
+  const buttons = document.querySelectorAll(
+    "#start-stop-watch, #stop-stop-watch, #restart-stop-watch"
+  );
+  buttons.forEach((button) => {
+    button.classList.remove("regular", "fruits");
+    button.classList.add(theme);
+  });
 }

@@ -10,7 +10,8 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-color: #30662dda;
+  background-color: #2b5329da;
+  transition: background 0.5s ease-in-out;
 }
 
 .header {
@@ -23,13 +24,15 @@ body {
   font-size: 2.5rem;
 }
 
-#button-restart {
+button.regular {
+  background-color: #2b5329;
   position: absolute;
   left: 2020px;
   top: 0px;
   font-size: 2rem;
   padding: 2rem;
   border-radius: 0.5rem;
+  border: none;
   font-weight: bold;
   background-color: rgb(33, 119, 119);
   margin-top: 2rem;
@@ -38,7 +41,8 @@ body {
   cursor: pointer;
 }
 
-#button-restart:hover {
+button.regular:hover {
+  background-color: #2b5329;
   position: absolute;
   left: 2020px;
   top: 0px;
@@ -46,13 +50,50 @@ body {
   padding: 2rem;
   border-radius: 0.5rem;
   font-weight: bold;
-  background-color: rgb(8, 53, 53);
+  background-color: #1d3a1e;
   margin-top: 2rem;
   margin-left: 5rem;
   color: white;
   cursor: pointer;
 }
 
+button#start-stop-watch.regular {
+  background-color: #007f5f;
+}
+button#stop-stop-watch.regular {
+  background-color: #ff3d00;
+}
+button#restart-stop-watch.regular {
+  background-color: #ffab00;
+}
+
+button.fruits {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  background: linear-gradient(90deg, #ffa726, #ff7043);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button.fruits:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 112, 67, 0.5);
+}
+
+button#start-stop-watch.fruits {
+  background: linear-gradient(90deg, #ffeb3b, #ffc107);
+}
+
+button#stop-stop-watch.fruits {
+  background: linear-gradient(90deg, #ff3d00, #d50000);
+}
+
+button#restart-stop-watch.fruits {
+  background: linear-gradient(90deg, #69f0ae, #00e676);
+}
 .card {
   position: relative;
   width: 100px;
@@ -201,4 +242,23 @@ body {
   margin-left: 5rem;
   color: white;
   cursor: pointer;
+}
+
+#switch-theme {
+  padding: 1rem;
+  background-color: orangered;
+  border: none;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  cursor: pointer;
+  border-radius: 0.6rem;
+}
+#switch-theme:hover {
+  padding: 1rem;
+  background-color: rgb(121, 39, 9);
+  border: none;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  cursor: pointer;
+  border-radius: 0.6rem;
 }
